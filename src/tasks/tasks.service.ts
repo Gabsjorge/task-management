@@ -8,8 +8,8 @@ import { TasksRepository } from './tasks.repository';
 @Injectable()
 export class TasksService {
   constructor(
-    // Note: On previous versions of typeorm lib, we should create a Repository class,
-    // this is no longer necessary, it can be injected directly thru this decorator below
+    // Note: On previous versions of typeorm lib, we must create a Repository class,
+    // this is no longer necessary, but to maintain a cleaner approach, we used a repository file
     private readonly tasksRepository: TasksRepository,
   ) {}
 

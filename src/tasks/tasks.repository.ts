@@ -5,6 +5,10 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatus } from './task-status.enum';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 
+// Note: On previous versions of typeorm lib, we must use the EntityRepository decorator
+// Now it is deprecated, and you can inject directly at the constructor
+// For cleaner code purposes, a Repository file was created, and get the injection on this
+// class instead, and then provide this class at the Task Module
 export class TasksRepository extends Repository<Task> {
   constructor(
     @InjectRepository(Task)
