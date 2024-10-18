@@ -26,8 +26,8 @@ export class TasksService {
 
     if (search) {
       query
-      .where('LOWER(task.title) LIKE LOWER(:search)', { search: `%${search}%` })
-      .orWhere('LOWER(task.description) LIKE LOWER(:search)', { search: `%${search}%` });
+        .where('LOWER(task.title) LIKE LOWER(:search)', { search: `%${search}%` })
+        .orWhere('LOWER(task.description) LIKE LOWER(:search)', { search: `%${search}%` });
     }
 
     const tasks = await query.getMany();
