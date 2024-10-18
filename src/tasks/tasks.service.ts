@@ -2,36 +2,19 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { TaskStatus } from './task-status.enum';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
-import { Repository } from 'typeorm';
+import { TasksRepository } from './tasks.repository';
 
 @Injectable()
 export class TasksService {
   constructor(
     // Note: On previous versions of typeorm lib, we should create a Repository class,
     // this is no longer necessary, it can be injected directly thru this decorator below
-    @InjectRepository(Task)
-    private tasksRepository: Repository<Task>,
+    private readonly tasksRepository: TasksRepository,
   ) {}
 
   async getTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
-    const { status, search } = filterDto;
-
-    const query = this.tasksRepository.createQueryBuilder('task');
-
-    if (status) {
-      query.where('task.status = :status', { status });
-    }
-
-    if (search) {
-      query
-        .where('LOWER(task.title) LIKE LOWER(:search)', { search: `%${search}%` })
-        .orWhere('LOWER(task.description) LIKE LOWER(:search)', { search: `%${search}%` });
-    }
-
-    const tasks = await query.getMany();
-    return tasks;
+    return this.tasksRepository.getTasks(filterDto);
   }
 
   async getTaskById(id: string): Promise<Task> {
@@ -49,16 +32,7 @@ export class TasksService {
   }
 
   async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
-    const { title, description } = createTaskDto;
-
-    const task = this.tasksRepository.create({
-      title,
-      description,
-      status: TaskStatus.OPEN,
-    });
-
-    await this.tasksRepository.save(task);
-    return task;
+    return this.tasksRepository.createTask(createTaskDto);
   }
 
   async updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
