@@ -4,6 +4,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { Task } from './task.entity';
 import { TasksRepository } from './tasks.repository';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class TasksService {
@@ -13,8 +14,8 @@ export class TasksService {
     private readonly tasksRepository: TasksRepository,
   ) {}
 
-  async getTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
-    return this.tasksRepository.getTasks(filterDto);
+  async getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
+    return this.tasksRepository.getTasks(filterDto, user);
   }
 
   async getTaskById(id: string): Promise<Task> {
@@ -31,8 +32,8 @@ export class TasksService {
     return found;
   }
 
-  async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
-    return this.tasksRepository.createTask(createTaskDto);
+  async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
+    return this.tasksRepository.createTask(createTaskDto, user);
   }
 
   async updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
